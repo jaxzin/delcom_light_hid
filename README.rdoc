@@ -2,30 +2,13 @@
 
 Provides a simple interface to turn on/off the red, green and yellow LEDs.
 
-It should be pretty trivial to adapt this driver to work with any generation II signal indicator, however I only have access to the RGY version.
+It should be pretty trivial to adapt this driver to work with any generation II
+signal indicator, however I only have access to the RGY version.
 
 == Requirements
 
 * ruby-usb: http://www.a-k-r.org/ruby-usb
 
-== Example usage
+== Example
 
-  require 'timeout'
-  require 'delcom_904008'
-
-  light = Delcom::SignalIndicator.new
-
-  begin
-    Timeout::timeout(5) do
-      loop do
-        light.red
-        sleep 0.1
-        light.off
-        sleep 0.05
-      end
-    end
-  rescue Timeout::Error
-    light.off
-  end
-
-  light.close
+See the bottom of +delcom_904008.rb+.
