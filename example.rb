@@ -1,4 +1,4 @@
-require 'delcom_hid'
+require 'delcom_light_hid'
 require 'timeout'
 
 light1 = Delcom.new(:device_index => 0)
