@@ -1,11 +1,15 @@
-= Ruby driver for the Delcom USB HID Visual Signal Indicator RGB
+= Ruby Driver for the Delcom USB HID Visual Signal Indicator RGB/RGY
 
-Provides a simple interface to turn on/off the red, green and blue LEDs.
+* Provides a simple interface to turn on/off the red, green and blue/yellow LEDs.
+* Supports RGY and RGB devices.
+* Can control multiple build lights attached to the same computer.
 
 == Requirements
 
 * ruby-usb: http://www.a-k-r.org/ruby-usb
 
+  gem install ruby-usb
+
 == Example
 
-See the bottom of +delcom_rgb.rb+.
+See +example.rb+.
