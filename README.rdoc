@@ -1,9 +1,6 @@
-= Ruby driver for the Delcom USB HID Visual Signal Indicator RGY (904008, generation II)
+= Ruby driver for the Delcom USB HID Visual Signal Indicator RGB
 
-Provides a simple interface to turn on/off the red, green and yellow LEDs.
-
-It should be pretty trivial to adapt this driver to work with any generation II
-signal indicator, however I only have access to the RGY version.
+Provides a simple interface to turn on/off the red, green and blue LEDs.
 
 == Requirements
 
@@ -11,4 +8,4 @@ signal indicator, however I only have access to the RGY version.
 
 == Example
 
-See the bottom of +delcom_904008.rb+.
+See the bottom of +delcom_rgb.rb+.
