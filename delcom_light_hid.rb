@@ -6,6 +6,7 @@
 #   Gregory McIntyre <blue.puyo@gmail.com>
 #     * RGY+RGB support
 #     * Multiple light support
+#     * Method to get current light color
 #
 # You'll need to install ruby-usb:
 #
@@ -76,6 +77,25 @@ class DelcomLight
 
   def set(data)
     handle.usb_control_msg(0x21, 0x09, 0x0635, 0x000, "\x65\x0C#{[data].pack('C')}\xFF\x00\x00\x00\x00", 0)
+  end
+
+  def get
+    buf = "\0"*8
+    buf[0] = 100
+    status = handle.usb_control_msg(0xa1, 0x01, 0x0301, 0x000, buf, 0)
+    raise "Error reading status" if status != 8
+    result = buf[2]
+    case result
+    when 0xfe then DelcomLight::RGB::GREEN
+    when 0xfd then DelcomLight::RGB::RED
+    when 0xfb then DelcomLight::RGB::BLUE
+    when 0xfc then DelcomLight::RGB::YELLOW
+    when 0xfa then DelcomLight::RGB::CYAN
+    when 0xf9 then DelcomLight::RGB::PURPLE
+    when 0xf8 then DelcomLight::RGB::WHITE
+    when 0xfe then DelcomLight::OFF
+    else raise 'Unknown result: %02x' % result
+    end
   end
 
   private

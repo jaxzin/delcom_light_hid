@@ -1,20 +1,17 @@
 require 'delcom_light_hid'
-require 'timeout'
 
-light1 = DelcomLight.new(:device_index => 0)
-light2 = DelcomLight.new(:device_index => 1)
+lights = (0...2).map{|n| DelcomLight.new(:device_index => n) }
 begin
-  begin
-    Timeout::timeout(5) do
-      loop do
-        light1.set DelcomLight::RGB::PURPLE
-        light2.set DelcomLight::RGB::YELLOW
-        light1, light2 = light2, light1
-        sleep 0.5
-      end
+  (0..(DelcomLight::RGB::COLORS.size - lights.size)).each do |i|
+    x = i
+    lights.each do |l|
+      col = DelcomLight::RGB::COLORS[x]
+      l.set col
+      p [col, l.get]
+      x += 1
     end
-  rescue Timeout::Error
-    light1.set(DelcomLight::OFF)
-    light2.set(DelcomLight::OFF)
+    sleep 0.5
   end
+ensure
+  lights.each{|light| light.set DelcomLight::OFF }
 end
