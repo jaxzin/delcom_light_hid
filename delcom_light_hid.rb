@@ -11,13 +11,13 @@
 #
 #   gem install ruby-usb
 #
-# Only pass :vendor_id, :product_id or :interface_id to Delcom.open if you need
-# to override their defaults.
+# Only pass :vendor_id, :product_id or :interface_id to DelcomLight.open if you
+# need to override their defaults.
 
 require 'rubygems' rescue nil
 require 'usb'
 
-class Delcom
+class DelcomLight
   DEFAULT_VENDOR_ID = 0x0fc5
   DEFAULT_PRODUCT_ID = 0xb080
   DEFAULT_DEVICE_INDEX = 0
