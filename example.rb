@@ -1,17 +1,17 @@
 require 'delcom_light_hid'
 
-lights = (0...2).map{|n| DelcomLight.new(:device_index => n) }
+lights = (0..1).map{|n| DelcomLight.new(:device_index => n) }
 begin
-  (0..(DelcomLight::RGB::COLORS.size - lights.size)).each do |i|
-    x = i
-    lights.each do |l|
-      col = DelcomLight::RGB::COLORS[x]
-      l.set col
-      p [col, l.get]
-      x += 1
+  DelcomLight::RGB.keys.each do |col|
+    lights.each do |light|
+      before = light.get_rgb
+      print "Setting #{light.device_index} from #{before} to #{col}..."
+      $stdout.flush
+      light.set_rgb col
+      puts " done (#{light.get_rgb})"
     end
     sleep 0.5
   end
 ensure
-  lights.each{|light| light.set DelcomLight::OFF }
+  lights.each{|light| light.set_rgb 'off' }
 end

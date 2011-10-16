@@ -24,26 +24,23 @@ class DelcomLight
   DEFAULT_DEVICE_INDEX = 0
   DEFAULT_INTERFACE_ID = 0
 
-  module RGB
-    COLORS = [
-      GREEN = 0x01,
-      RED = 0x02,
-      BLUE = 0x04,
-      YELLOW = GREEN | RED,
-      CYAN = GREEN | BLUE,
-      PURPLE = RED | BLUE,
-      WHITE = GREEN | RED | BLUE,
-    ]
-  end
-  module RGY
-    COLORS = [
-      GREEN = 0x01,
-      RED = 0x02,
-      YELLOW = 0x04,
-      WHITE = GREEN | RED | YELLOW,
-    ]
-  end
-  OFF = 0x00
+  RGB = {
+    'green' => 0x01,
+    'red' => 0x02,
+    'blue' => 0x04,
+    'off' => 0x00,
+  }
+  RGB['yellow'] = RGB['green'] | RGB['red']
+  RGB['cyan'] = RGB['green'] | RGB['blue']
+  RGB['purple'] = RGB['red'] | RGB['blue']
+  RGB['white'] = RGB['green'] | RGB['red'] | RGB['blue']
+
+  RGY = {
+    'green' => 0x01,
+    'red' => 0x02,
+    'yellow' => 0x04,
+  }
+  RGY['white'] = RGY['green'] | RGY['red'] | RGY['yellow']
 
   # Create a handler and ensure it gets closed after your block exits.
   def self.open(*args_to_new, &block)
@@ -54,6 +51,8 @@ class DelcomLight
       light.close
     end
   end
+
+  attr_reader :device_index
 
   # Create a handler that can control the light. Options are:
   #
@@ -75,8 +74,51 @@ class DelcomLight
     @handle = nil
   end
 
+  def set_rgb(colour)
+    set(RGB.fetch(colour))
+  end
+
+  def set_rgy(colour)
+    set(RGY.fetch(colour))
+  end
+
+  def get_rgb
+    case get_data
+    when 0xfe then 'green'
+    when 0xfd then 'red'
+    when 0xfb then 'blue'
+    when 0xfc then 'yellow'
+    when 0xfa then 'cyan'
+    when 0xf9 then 'purple'
+    when 0xf8 then 'white'
+    when 0x00, 0xfe then 'off'
+    else 'unknown'
+    end
+  end
+
+  def get_rgy
+    case get_data
+    when 0xfe then 'green'
+    when 0xfd then 'red'
+    when 0xfb then 'yellow'
+    when 0xf8 then 'white'
+    when 0x00, 0xfe then 'off'
+    else 'unknown'
+    end
+  end
+
+  private
+
   def set(data)
-    handle.usb_control_msg(0x21, 0x09, 0x0635, 0x000, "\x65\x0C#{[data].pack('C')}\xFF\x00\x00\x00\x00", 0)
+    handle.usb_control_msg(0x21, 0x09, 0x0300, 0x000, "\x65\x0C#{[data].pack('C')}\xFF\x00\x00\x00\x00", 0)
+  end
+
+  def get_data
+    buf = "\0"*8
+    buf[0] = 100
+    status = handle.usb_control_msg(0xa1, 0x01, 0x0301, 0x000, buf, 0)
+    raise "Error reading status" if status != 8
+    buf[2]
   end
 
   def get
