@@ -1,8 +1,18 @@
-= Ruby Driver for the Delcom USB HID Visual Signal Indicator RGB/RGY
+= NOTE: Use blinky
+
+Perryn Fowler wrote an equivalent library works in the same way but has better
+compatibility across platforms. Check out blinky: https://github.com/perryn/blinky
+
+  brew install libusb-compat
+  gem install blinky
+
+= This library:
 
 * Provides a simple interface to turn on/off the red, green and blue/yellow LEDs.
 * Supports RGY and RGB devices.
 * Can control multiple build lights attached to the same computer.
+* Works well on Linux.
+* No support for Mac OSX.
 
 == Requirements
 
